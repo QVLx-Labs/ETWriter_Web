@@ -1,0 +1,300 @@
+/*
+  ETWriter - Text editor for all in the galaxy
+
+  Copyright QVLX LLC. All Rights Reserved.
+*/
+:root { --bg:#003b2f; --fg:#e6eaf0; --muted:#9aa4af; --accent:#5DBAA8; --bad:#ffffff; --ok:#7dffb3; }
+html,body { height:100%; margin:0; background:var(--bg); color:var(--fg); font:14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+.wrap { max-width:1200px; margin:0 auto; padding:16px; }
+h1 { margin-bottom: 0px; margin-left: 8px; font-size: 1.4rem; }
+.bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:10px; }
+.bar > * { margin:0; }
+select, input[type="text"], input[type="number"], textarea, button {
+  background:#0f1217; color:var(--fg); border:1px solid #1b2027; border-radius:8px; padding:8px 10px;
+}
+input[type="text"]:invalid, .need { outline:1px solid var(--bad); }
+button { cursor:pointer; }
+button.primary { background:var(--accent); color:#061524; border-color:#2a5b87; font-weight: bold;}
+button.good { background:var(--ok); color:#062412; border-color:#2a874d; }
+button.danger { background:var(--bad); color:#240606; border-color:#872a2a; }
+.row { display:flex; gap:12px; }
+.col { flex:1; display:flex; flex-direction:column; min-width:0; }
+.editor, .hex, .commands { height:56vh; width:100%; resize:vertical; }
+.small { font-size:12px; color:var(--muted); }
+.mono { font-family:inherit; }
+.status { margin-top:8px; min-height:20px; color:var(--muted); }
+.pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#12161c; border:1px solid #1b2027; margin-right:6px; }
+.kv { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+.kv .item { background:#0f1217; border:1px solid #1b2027; border-radius:8px; padding:6px 8px; }
+.footer { margin-top:12px; color:var(--muted); }
+.hidden { display:none !important; }
+
+  html, body { height: 100%; }
+body { margin: 0; }
+.wrap { min-height: 100%; display: flex; flex-direction: column; }
+
+.bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:8px 0; }
+.infobar { padding: 6px 0 0; }
+.info-grid { display:flex; flex-wrap:wrap; gap:16px; align-items:center; font-size: 0.95rem; }
+.info-grid .item b { margin-right: 6px; }
+
+.panes { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.row { flex:1 1 auto; min-height:0; display:grid; grid-template-columns: 1fr 320px; gap:16px; padding:12px 0; overflow:hidden; }
+.row.hidden { display:none; }
+.row .col { min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+#cmHost, #txtEditor, #txtHex, #txtHexAscii, #txtCommands { flex:1 1 auto; min-height:0; width:100%; border:1px solid #1b2027; border-radius:8px; }
+#cmHost { min-height:0 !important; }
+.CodeMirror { height:100% !important; }
+.cm-s-darcula .CodeMirror-activeline-background { background: rgba(255,255,255,0.06); }
+.small { opacity: 0.8; font-size: 0.9em; }
+.hidden { display:none; }
+.mono { font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,"Courier New",monospace; font-size:13.5px; }
+
+/* Full-height app layout */
+html, body {
+height: 100%;
+}
+body {
+margin: 0;
+}
+.wrap {
+min-height: 100%;
+display: flex;
+flex-direction: column;
+}
+
+/* Toolbar stays natural height; panes take the rest */
+.bar {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+align-items: center;
+padding: 8px 0;
+}
+
+/* NEW: the panes area fills remaining space */
+.panes {
+flex: 1 1 auto;
+min-height: 0;          /* important for nested flex overflow */
+display: flex;
+flex-direction: column;
+}
+
+/* Each pane fills the panes area, with scroll inside */
+.row {
+flex: 1 1 auto;
+min-height: 0;
+display: grid;
+grid-template-columns: 1fr 320px;  /* editor + sidebar */
+gap: 16px;
+padding: 12px 0;
+overflow: hidden;
+}
+.row.hidden { display: none; }
+
+/* Columns fill and scroll as needed */
+.row .col {
+min-height: 0;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+
+/* Editor hosts fill */
+#cmHost,
+#txtEditor,
+#txtHex,
+#txtHexAscii,
+#txtCommands {
+flex: 1 1 auto;
+min-height: 0;
+}
+
+/* Make CodeMirror fill its container */
+.CodeMirror {
+height: 100% !important;
+}
+
+/* Selected line highlight (active-line addon adds .CodeMirror-activeline) */
+.cm-s-darcula .CodeMirror-activeline-background {
+background: rgba(255, 255, 255, 0.06);
+}
+
+/* Side info scrolls */
+.kv, .status, .footer {
+overflow: auto;
+}
+
+/* Optional: nicer look */
+.editor.mono, .hex.mono, .commands.mono {
+font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
+font-size: 13.5px;
+}
+
+/* If you still want a border around the editor area */
+#cmHost, #txtEditor, #txtHex, #txtHexAscii, #txtCommands {
+border: 1px solid #1b2027;
+border-radius: 8px;
+}
+
+/* Two-column by default (hex/bulk) */
+.row {
+display: grid;
+grid-template-columns: minmax(0,1fr) 320px;
+gap: 16px;
+}
+
+/* Editor mode = full width */
+.row.onecol {
+grid-template-columns: minmax(0,1fr);
+}
+
+/* Make CM stretch */
+#cmHost, .CodeMirror { width: 100%; height: 100%; border: 1px solid #606060; }
+
+/* Slight yellow line numbers (fits dark theme) */
+.cm-s-darcula .CodeMirror-linenumber {
+color: #d7c27a; /* gentle yellow */
+opacity: 0.95;
+}
+
+/* Keep gutter feel consistent with your borders */
+.cm-s-darcula .CodeMirror-gutters {
+background: #141820;
+border-right: 1px solid #1b2027;
+}
+
+/* Selected line highlight you already enabled (FYI) */
+.cm-s-darcula .CodeMirror-activeline-background {
+background: rgba(255, 255, 255, 0.06);
+}
+
+/* Language badge */
+.langBadge {
+display: inline-flex;
+align-items: center;
+padding: 2px 10px;
+border-radius: 999px;
+font-weight: 600;
+line-height: 1.2;
+border: 1px solid #1b2027; /* matches the rest of your UI */
+}
+
+img {
+height: 80px;
+width: 80px;
+}
+
+.top {
+display: inline-flex;
+align-items: center;
+}
+
+/* ---------- Mobile fixes for Hex + Bulk panes (low-risk, CSS-only) ---------- */
+
+/* 1) Stack the two columns on small screens (no fixed 320px sidebar) */
+@media (max-width: 860px) {
+/* Every pane that currently uses the two-column .row grid becomes one column */
+.row { 
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+  padding: 10px 0 !important;
+  overflow: visible !important; /* prevent clipped children after stacking */
+}
+
+/* Make sure both columns can shrink and scroll when stacked */
+.row .col {
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* 2) Give useful vertical space to each stacked panel */
+/* First column = primary editor area (CodeMirror / text). Make it tall. */
+#editorPane .col:first-child,
+#hexPane    .col:first-child,
+#bulkPane   .col:first-child {
+  min-height: 48vh !important;
+}
+
+/* Second column = preview / side info. Slightly shorter but scrollable. */
+#hexPane  .col:last-child,
+#bulkPane .col:last-child {
+  min-height: 28vh !important;
+  overflow: auto !important;
+}
+
+/* 3) Ensure editors and textareas fill their column and don’t cause overflow */
+#cmHost,
+#txtEditor,
+#txtHex,
+#txtHexAscii,
+#txtCommands,
+.CodeMirror {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;          /* allow proper flex/grid shrinking */
+}
+
+/* 4) Slightly smaller monospace on tight screens for more columns visible */
+.mono {
+  font-size: 12.5px !important;
+}
+
+/* 5) Toolbar & info: breathe a bit, avoid wrapping chaos */
+.wrap {
+  padding: 12px !important;
+}
+.bar {
+  gap: 8px !important;
+}
+.info-grid {
+  gap: 10px !important;
+  font-size: 0.9rem !important;
+}
+
+/* 6) Avoid fixed widths that can cause horizontal scrollbars */
+.pill, .kv .item {
+  max-width: 100% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+}
+
+/* Ultra-small phones: give the preview/status a bit less, editor a bit more */
+@media (max-width: 480px) {
+#hexPane  .col:first-child,
+#bulkPane .col:first-child {
+  min-height: 54vh !important;
+}
+#hexPane  .col:last-child,
+#bulkPane .col:last-child {
+  min-height: 24vh !important;
+}
+
+.intro {
+  color: gray;
+  font-size: 0.7rem !important;
+}
+}
+
+/* Defensive: never let CodeMirror gutters force horizontal scrolling */
+.cm-s-darcula .CodeMirror-gutters {
+max-width: 25%;
+box-sizing: border-box;
+}
+
+/* Defensive: ensure no element in sidebars forces horizontal scrolling */
+#hexPane .col:last-child * ,
+#bulkPane .col:last-child * {
+max-width: 100%;
+box-sizing: border-box;
+word-break: break-word;
+}
+
+@media (min-width: 600px) {
+.intro {
+color: gray;
+font-size: 1rem !important;
+}
+}
